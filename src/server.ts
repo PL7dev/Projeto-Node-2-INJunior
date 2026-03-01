@@ -6,6 +6,7 @@ import authRoutes from './routes/auth.routes'
 import usersRoutes from './routes/users.routes'
 import postsRoutes from './routes/posts.routes'
 import commentsRoutes from './routes/comments.routes'
+import likesRoutes from './routes/likes.routes'
 
 dotenv.config()
 
@@ -29,6 +30,7 @@ async function start() {
     await app.register(usersRoutes, { prefix: '/users' })
     await app.register(postsRoutes, { prefix: '/posts' })
     await app.register(commentsRoutes, { prefix: '/comments' })
+    await app.register(likesRoutes, { prefix: '/likes' })
 
     app.get('/', async () => {
       return { message: 'API rodando' }
