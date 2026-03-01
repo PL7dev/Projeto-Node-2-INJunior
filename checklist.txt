@@ -1,0 +1,34 @@
+Converter routes → plugins do Fastify e registrar (users, posts, auth)
+
+Converter controllers para funções Fastify em TS (users.controller.ts, posts.controller.ts, auth.controller.ts)
+
+Middleware / proteção JWT com @fastify/jwt (preHandler)
+
+Ajustes: não retornar senha, incluir posts no GET user, validações básicas types/interfaces
+
+Testes finais + scripts + build
+
+Commit final + README mínimo
+
+
+---
+
+tsconfig.json criado
+
+ package.json scripts atualizados
+
+ src/server.ts funcionando (Fastify + CORS + JWT plugin)
+
+ src/utils/prisma.ts ok
+
+ src/routes/*.routes.ts prontos e registrados
+
+ src/controllers/*.controller.ts convertidos e não retornam senha
+
+ JWT funcionando (login retorna token)
+
+ Rotas protegidas (post/create, delete/update sensíveis)
+
+ Testes manuais completados (create user, login, create post, get posts, get user posts)
+
+ README atualizado
