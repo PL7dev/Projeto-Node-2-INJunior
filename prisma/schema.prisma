@@ -7,15 +7,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Usuario {
-  id        Int      @id @default(autoincrement())
-  nome      String
-  email     String   @unique
-  senha     String
-  foto      String?
-  posts     Post[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model User {
+  id       Int       @id @default(autoincrement())
+  nome     String
+  email    String    @unique
+  senha    String
+  foto     String?
+  posts    Post[]
+  comments Comment[]
+  likes    Like[]
 }
 
 model Post {
@@ -23,6 +23,38 @@ model Post {
   titulo     String
   conteudo   String
   created_at DateTime @default(now())
-  usuario    Usuario  @relation(fields: [usuarioId], references: [id])
-  usuarioId  Int
+
+  usuarioId Int
+  usuario   User @relation(fields: [usuarioId], references: [id])
+
+  comments Comment[]
+  likes    Like[]
+}
+
+model Comment {
+  id         Int      @id @default(autoincrement())
+  conteudo   String
+  created_at DateTime @default(now())
+
+  usuarioId Int
+  usuario   User @relation(fields: [usuarioId], references: [id])
+
+  postId Int
+  post   Post @relation(fields: [postId], references: [id])
+
+  likes Like[]
+}
+
+model Like {
+  id         Int      @id @default(autoincrement())
+  created_at DateTime @default(now())
+
+  usuarioId Int
+  usuario   User @relation(fields: [usuarioId], references: [id])
+
+  postId Int?
+  post   Post? @relation(fields: [postId], references: [id])
+
+  commentId Int?
+  comment   Comment? @relation(fields: [commentId], references: [id])
 }
