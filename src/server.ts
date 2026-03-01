@@ -5,6 +5,7 @@ import fastifyJwt from '@fastify/jwt'
 import authRoutes from './routes/auth.routes'
 import usersRoutes from './routes/users.routes'
 import postsRoutes from './routes/posts.routes'
+import commentsRoutes from './routes/comments.routes'
 
 dotenv.config()
 
@@ -27,6 +28,7 @@ async function start() {
     await app.register(authRoutes, { prefix: '/auth' })
     await app.register(usersRoutes, { prefix: '/users' })
     await app.register(postsRoutes, { prefix: '/posts' })
+    await app.register(commentsRoutes, { prefix: '/comments' })
 
     app.get('/', async () => {
       return { message: 'API rodando' }

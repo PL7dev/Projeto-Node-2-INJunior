@@ -20,7 +20,7 @@ export async function createUser(
       return reply.status(400).send({ error: 'Campos obrigatórios faltando' })
     }
 
-    const userExists = await prisma.usuario.findUnique({
+    const userExists = await prisma.user.findUnique({
       where: { email }
     })
 
@@ -30,7 +30,7 @@ export async function createUser(
 
     const senhaHash = await bcrypt.hash(senha, 10)
 
-    const user = await prisma.usuario.create({
+    const user = await prisma.user.create({
       data: {
         nome,
         email,
@@ -53,7 +53,7 @@ export async function getAllUsers(
   reply: FastifyReply
 ) {
   try {
-    const users = await prisma.usuario.findMany()
+    const users = await prisma.user.findMany()
 
     const usersWithoutPassword = users.map(({ senha, ...user }) => user)
 
@@ -74,7 +74,7 @@ export async function getUserById(
       return reply.status(400).send({ error: 'ID inválido' })
     }
 
-    const user = await prisma.usuario.findUnique({
+    const user = await prisma.user.findUnique({
       where: { id },
       include: { posts: true }
     })
@@ -106,7 +106,7 @@ export async function updateUser(
       return reply.status(400).send({ error: 'ID inválido' })
     }
 
-    const userExists = await prisma.usuario.findUnique({
+    const userExists = await prisma.user.findUnique({
       where: { id }
     })
 
@@ -121,7 +121,7 @@ export async function updateUser(
       data.senha = await bcrypt.default.hash(data.senha, 10)
     }
 
-    const updatedUser = await prisma.usuario.update({
+    const updatedUser = await prisma.user.update({
       where: { id },
       data
     })
@@ -146,7 +146,7 @@ export async function deleteUser(
       return reply.status(400).send({ error: 'ID inválido' })
     }
 
-    const userExists = await prisma.usuario.findUnique({
+    const userExists = await prisma.user.findUnique({
       where: { id }
     })
 
@@ -154,7 +154,7 @@ export async function deleteUser(
       return reply.status(404).send({ error: 'Usuário não encontrado' })
     }
 
-    await prisma.usuario.delete({
+    await prisma.user.delete({
       where: { id }
     })
 
