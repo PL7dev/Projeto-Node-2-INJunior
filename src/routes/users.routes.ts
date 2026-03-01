@@ -12,7 +12,7 @@ export default async function usersRoutes(app: FastifyInstance) {
   app.post('/', createUser)
   app.get('/', getAllUsers)
   app.get('/:id', getUserById)
-  app.put('/:id', updateUser)
-  app.delete('/:id', deleteUser)
+  app.put('/:id', { preHandler: (app as any).authenticate }, updateUser)
+  app.delete('/:id', { preHandler: (app as any).authenticate }, deleteUser)
 
 }

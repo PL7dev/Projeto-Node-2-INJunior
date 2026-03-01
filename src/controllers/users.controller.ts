@@ -44,6 +44,7 @@ export async function createUser(
     return reply.status(201).send(userWithoutPassword)
 
   } catch (error) {
+    console.error(error)
     return reply.status(500).send({ error: 'Erro ao criar usuário' })
   }
 }
@@ -58,7 +59,9 @@ export async function getAllUsers(
     const usersWithoutPassword = users.map(({ senha, ...user }) => user)
 
     return reply.send(usersWithoutPassword)
+
   } catch (error) {
+    console.error(error)
     return reply.status(500).send({ error: 'Erro ao buscar usuários' })
   }
 }
@@ -88,22 +91,25 @@ export async function getUserById(
     return reply.send(userWithoutPassword)
 
   } catch (error) {
+    console.error(error)
     return reply.status(500).send({ error: 'Erro ao buscar usuário' })
   }
 }
 
 export async function updateUser(
-  request: FastifyRequest<{
-    Params: { id: string }
-    Body: { nome?: string; email?: string; senha?: string; foto?: string }
-  }>,
+  request: any,
   reply: FastifyReply
 ) {
   try {
     const id = Number(request.params.id)
+    const userIdFromToken = request.user.id
 
     if (isNaN(id)) {
       return reply.status(400).send({ error: 'ID inválido' })
+    }
+
+    if (id !== userIdFromToken) {
+      return reply.status(403).send({ error: 'Você não pode alterar este usuário' })
     }
 
     const userExists = await prisma.user.findUnique({
@@ -117,8 +123,7 @@ export async function updateUser(
     const data: any = { ...request.body }
 
     if (data.senha) {
-      const bcrypt = await import('bcryptjs')
-      data.senha = await bcrypt.default.hash(data.senha, 10)
+      data.senha = await bcrypt.hash(data.senha, 10)
     }
 
     const updatedUser = await prisma.user.update({
@@ -131,19 +136,25 @@ export async function updateUser(
     return reply.send(userWithoutPassword)
 
   } catch (error) {
+    console.error(error)
     return reply.status(500).send({ error: 'Erro ao atualizar usuário' })
   }
 }
 
 export async function deleteUser(
-  request: FastifyRequest<{ Params: { id: string } }>,
+  request: any,
   reply: FastifyReply
 ) {
   try {
     const id = Number(request.params.id)
+    const userIdFromToken = request.user.id
 
     if (isNaN(id)) {
       return reply.status(400).send({ error: 'ID inválido' })
+    }
+
+    if (id !== userIdFromToken) {
+      return reply.status(403).send({ error: 'Você não pode deletar este usuário' })
     }
 
     const userExists = await prisma.user.findUnique({
@@ -161,6 +172,7 @@ export async function deleteUser(
     return reply.send({ message: 'Usuário deletado com sucesso' })
 
   } catch (error) {
+    console.error(error)
     return reply.status(500).send({ error: 'Erro ao deletar usuário' })
   }
 }
